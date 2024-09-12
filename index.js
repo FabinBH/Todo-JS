@@ -21,6 +21,11 @@ const cadastrarMeta = async () => {
 }
 
 const listarMetas = async () => {
+    if (metas.length == 0) {
+        mensagem = "Não existem metas!"
+        return
+    }
+
     const respostas = await checkbox({
         message: "Selecione suas metas",
         choices: [...metas],
@@ -78,6 +83,30 @@ const metasAbertas = async () => {
     })
 }
 
+const excluirMetas = async () => {
+    const excluidas = metas.map((meta) => {
+        return { value: meta.value, check: false }
+    })
+
+    const itensExcluidos = await checkbox({
+        message: "Selecione as metas que deseja excluir",
+        choices: [...metas],
+        instructions: false
+    })
+
+    if (itensExcluidos.length == 0) {
+        console.log("Não há itens para excluir")
+    }
+
+    itensExcluidos.forEach((item) => {
+        metas = metas.filter((meta) => {
+            return meta.value != item
+        })
+    })
+
+    console.log("Meta(s) excluída(s) com sucesso")
+}
+
 const start = async () => {
 
     while (true) {
@@ -101,6 +130,10 @@ const start = async () => {
                     value: "abertas"
                 },
                 {
+                    name: "Excluir metas",
+                    value: "excluir"
+                },
+                {
                     name: "Sair",
                     value: "sair"
                 }
@@ -119,6 +152,9 @@ const start = async () => {
                 break
             case "abertas":
                 await metasAbertas()
+                break
+            case "excluir":
+                await excluirMetas()
                 break
             case "sair":
                 return
