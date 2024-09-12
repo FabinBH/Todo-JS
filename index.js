@@ -65,6 +65,11 @@ const listarMetas = async () => {
 }
 
 const metasRealizadas = async () => {
+    if (metas.length == 0) {
+        mensagem = "Não existem metas!"
+        return
+    }
+
     const realizadas = metas.filter((meta) => {
         return meta.check
     })
@@ -81,6 +86,11 @@ const metasRealizadas = async () => {
 }
 
 const metasAbertas = async () => {
+    if (metas.length == 0) {
+        mensagem = "Não existem metas!"
+        return
+    }
+
     const abertas = metas.filter((meta) => {
         return !meta.check
     })
@@ -97,13 +107,18 @@ const metasAbertas = async () => {
 }
 
 const excluirMetas = async () => {
+    if (metas.length == 0) {
+        mensagem = "Não existem metas!"
+        return
+    }
+
     const excluidas = metas.map((meta) => {
         return { value: meta.value, check: false }
     })
 
     const itensExcluidos = await checkbox({
         message: "Selecione as metas que deseja excluir",
-        choices: [...metas],
+        choices: [...excluidas],
         instructions: false
     })
 
