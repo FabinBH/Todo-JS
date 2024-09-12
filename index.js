@@ -1,5 +1,7 @@
 const { select, input, checkbox } = require('@inquirer/prompts')
 
+let mensagem = "Bem vindo ao seu aplicativo de metas!"
+
 let meta = {
     value: "Beber água",
     check: false
@@ -11,13 +13,15 @@ const cadastrarMeta = async () => {
     const meta = await input({ message: "Digite sua meta: " })
 
     if (meta.length == 0) {
-        console.log("É preciso escrever uma meta!")
+        mensagem = "É preciso escrever uma meta!"
         return
     }
 
     metas.push(
         { value: meta, check: false}
     )
+
+    mensagem = "Meta cadastrada com sucesso!"
 }
 
 const listarMetas = async () => {
@@ -48,7 +52,7 @@ const listarMetas = async () => {
         meta.check = true
     })
 
-    console.log("Meta(s) concluída(s)")
+    mensagem = "Meta(s) concluída(s)"
 }
 
 const metasRealizadas = async () => {
@@ -57,7 +61,7 @@ const metasRealizadas = async () => {
     })
 
     if (realizadas.length == 0) {
-        console.log("Não há metas realizadas")
+        mensagem = "Não há metas realizadas!"
         return
     }
 
@@ -73,7 +77,7 @@ const metasAbertas = async () => {
     })
 
     if (abertas.length == 0) {
-        console.log("Não há metas abertas")
+        mensagem = "Não há metas abertas!"
         return
     }
 
@@ -95,7 +99,7 @@ const excluirMetas = async () => {
     })
 
     if (itensExcluidos.length == 0) {
-        console.log("Não há itens para excluir")
+        mensagem = "Não há itens para excluir!"
     }
 
     itensExcluidos.forEach((item) => {
@@ -104,7 +108,17 @@ const excluirMetas = async () => {
         })
     })
 
-    console.log("Meta(s) excluída(s) com sucesso")
+    mensagem = "Meta(s) excluída(s) com sucesso"
+}
+
+const mostrarMensagem = () => {
+    console.clear()
+
+    if (mensagem != "") {
+        console.log(mensagem)
+        console.log()
+        mensagem = ""
+    }
 }
 
 const start = async () => {
@@ -157,6 +171,7 @@ const start = async () => {
                 await excluirMetas()
                 break
             case "sair":
+                console.log("Até logo!")
                 return
         }
     }
