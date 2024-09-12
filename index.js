@@ -1,13 +1,22 @@
 const { select, input, checkbox } = require('@inquirer/prompts')
+const fs = require("fs").promises
 
 let mensagem = "Bem vindo ao seu aplicativo de metas!"
 
-let meta = {
-    value: "Beber água",
-    check: false
+let metas
+
+const carregarMetas = async () => {
+    try {
+        const dados = await fs.readFile('metas.json', 'utf-8')
+        metas = JSON.parse(dados)
+    } catch (error) {
+        metas = []
+    }
 }
 
-let metas = [meta]
+const salvarMetas = async () => {
+    await fs.writeFile('metas.json', JSON.stringify(metas, null, 2))
+}
 
 const cadastrarMeta = async () => {
     const meta = await input({ message: "Digite sua meta: " })
@@ -99,7 +108,8 @@ const excluirMetas = async () => {
     })
 
     if (itensExcluidos.length == 0) {
-        mensagem = "Não há itens para excluir!"
+        mensagem = "Não há metas para excluir!"
+        return
     }
 
     itensExcluidos.forEach((item) => {
@@ -123,7 +133,12 @@ const mostrarMensagem = () => {
 
 const start = async () => {
 
+    await carregarMetas()
+
     while (true) {
+        mostrarMensagem()
+        await salvarMetas()
+
         const opcao = await select({
             message: 'MENU >',
             choices: [
@@ -136,6 +151,7 @@ const start = async () => {
                     value: "listar"
                 },
                 {
+
                     name: "Metas realizadas",
                     value: "realizadas"
                 },
